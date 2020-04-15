@@ -23,7 +23,7 @@ services:
 
 jobs:
   include:
-    - stage: build test docker image & run tests
+    - stage: build test image and run tests
     script: 
       - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
       - docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
