@@ -10,9 +10,7 @@ jobs:
         - stage: test
           script:
             - docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
-        - stage: after_success
-          name: "push to docker hub"
-          script:
+          after_success:          
             - docker build -t atsangarides/multi-client ./client
             - docker build -t atsangarides/multi-nginx ./nginx
             - docker build -t atsangarides/multi-server ./server
@@ -25,6 +23,7 @@ jobs:
             - docker push atsangarides/multi-server
             - docker push atsangarides/multi-worker
 
+            
 # deploy:
 #     provider: elasticbeanstalk
 #     region: "eu-west-2"
