@@ -2,14 +2,11 @@ sudo: required
 services:
     - docker
 
-# before_install:
-#     - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
+before_install:
+    - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
 
 jobs:
     include: 
-        - stage: build test image
-          before_install:
-            script: docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
         - stage: test
           script: docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
         - stage: push to docker hub
