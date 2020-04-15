@@ -9,12 +9,14 @@ jobs:
     include: 
         - stage: test
           script: docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
-        - stage: push to docker hub
+        - stage: build prod images
           script:
             - docker build -t atsangarides/multi-client ./client
             - docker build -t atsangarides/multi-nginx ./nginx
             - docker build -t atsangarides/multi-server ./server
             - docker build -t atsangarides/multi-worker ./worker
+        - stage: push to docker hub
+          script:
             # Log in to docker cli
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
             #  Push images to docker hub
