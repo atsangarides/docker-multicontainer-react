@@ -2,24 +2,29 @@ sudo: required
 services:
     - docker
 
-before_install:
-    - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
-
-script:
-    - docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
-
-after_success:
-    - docker build -t atsangarides/multi-client ./client
-    - docker build -t atsangarides/multi-nginx ./nginx
-    - docker build -t atsangarides/multi-server ./server
-    - docker build -t atsangarides/multi-worker ./worker
-    # Log in to docker cli
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-    #  Push images to docker hub
-    - docker push atsangarides/multi-client
-    - docker push atsangarides/multi-nginx
-    - docker push atsangarides/multi-server
-    - docker push atsangarides/multi-worker
+jobs:
+    include:
+        - stage: before_install
+            name: "Build test image"
+            script:
+                - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
+        - stage: test
+            script:
+                - docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
+        - stage: after_success
+                name: "push to docker hub"
+                script:
+                    - docker build -t atsangarides/multi-client ./client
+                    - docker build -t atsangarides/multi-nginx ./nginx
+                    - docker build -t atsangarides/multi-server ./server
+                    - docker build -t atsangarides/multi-worker ./worker
+                    # Log in to docker cli
+                    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+                    #  Push images to docker hub
+                    - docker push atsangarides/multi-client
+                    - docker push atsangarides/multi-nginx
+                    - docker push atsangarides/multi-server
+                    - docker push atsangarides/multi-worker
 
 # deploy:
 #     provider: elasticbeanstalk
