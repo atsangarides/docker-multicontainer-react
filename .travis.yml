@@ -2,15 +2,17 @@ sudo: required
 services:
     - docker
 
-before_install:
-    - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
+# before_install:
+#     - docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client
 
 jobs:
-    include:                
+    include: 
+        - stage: build test image
+          script: docker build -t atsangarides/docker-react-multicontainer-test -f ./client/Dockerfile.dev ./client         
         - stage: test
+          script: docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
+        - stage: push to docker hub
           script:
-            - docker run -e CI=true atsangarides/docker-react-multicontainer-test npm test
-          after_success:          
             - docker build -t atsangarides/multi-client ./client
             - docker build -t atsangarides/multi-nginx ./nginx
             - docker build -t atsangarides/multi-server ./server
@@ -23,7 +25,6 @@ jobs:
             - docker push atsangarides/multi-server
             - docker push atsangarides/multi-worker
 
-            
 # deploy:
 #     provider: elasticbeanstalk
 #     region: "eu-west-2"
