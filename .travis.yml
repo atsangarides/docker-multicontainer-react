@@ -40,14 +40,15 @@ after_success:
 #         - docker push atsangarides/multi-nginx
 #         - docker push atsangarides/multi-server
 #         - docker push atsangarides/multi-worker
-# deploy:
-#     provider: elasticbeanstalk
-#     region: "eu-west-2"
-#     app: "docker-react"
-#     env: "DockerReact-env"
-#     bucket_name: "elasticbeanstalk-eu-west-2-983627010696"
-#     bucket_path: "docker-react"
-#     on:
-#         branch: master
-#     access_key_id: $AWS_ACCESS_KEY
-#     secret_access_key: $AWS_SECRET_KEY
+deploy:
+    # edge: true
+    provider: elasticbeanstalk
+    region: "eu-west-2"
+    app: "multi-docker"
+    env: "MultiDocker-env"
+    bucket_name: "elasticbeanstalk-eu-west-2-983627010696"
+    bucket_path: "multi-docker"
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
